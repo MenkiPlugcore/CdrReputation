@@ -22,5 +22,5 @@ jobs:
       - name: Upload plugin JAR
         uses: actions/upload-artifact@v4
         with:
-          name: CdrReputation-0.1.0
-          path: target/CdrReputation-0.1.0.jar
+          name: CdrReputation-0.2.0
+          path: target/CdrReputation-0.2.0.jar
