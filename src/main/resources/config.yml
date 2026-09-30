@@ -6,7 +6,6 @@ reputation:
   minimum: -5000
   maximum: 5000
 
-# Ordered from highest to lowest. Bounds are inclusive.
 tiers:
   - key: revered
     display: "&dRevered"
