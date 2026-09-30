@@ -1,0 +1,51 @@
+storage:
+  file: reputation.db
+
+reputation:
+  default: 0
+  minimum: -5000
+  maximum: 5000
+
+# Ordered from highest to lowest. Bounds are inclusive.
+tiers:
+  - key: revered
+    display: "&dRevered"
+    min: 1000
+    max: 5000
+  - key: respected
+    display: "&bRespected"
+    min: 500
+    max: 999
+  - key: trusted
+    display: "&aTrusted"
+    min: 100
+    max: 499
+  - key: neutral
+    display: "&fNeutral"
+    min: -99
+    max: 99
+  - key: suspicious
+    display: "&eSuspicious"
+    min: -499
+    max: -100
+  - key: outlaw
+    display: "&cOutlaw"
+    min: -999
+    max: -500
+  - key: infamous
+    display: "&4Infamous"
+    min: -5000
+    max: -1000
+
+messages:
+  prefix: "&8[&dCdrReputation&8] &r"
+  no-permission: "&cKamu tidak punya izin untuk menggunakan perintah ini."
+  usage: "&7Gunakan: &f/cdrrep <get|set|add|remove|history|reload>"
+  player-not-found: "&cPlayer tidak ditemukan. Player harus pernah masuk ke server atau sedang online."
+  invalid-number: "&cNilai reputasi harus berupa angka bulat."
+  get: "&f%player% &7memiliki reputasi &d%reputation% &7(&r%tier%&7)."
+  changed: "&f%player% &7berubah dari &d%old% &7menjadi &d%new% &8(&f%delta%&8)."
+  reloaded: "&aKonfigurasi CdrReputation berhasil dimuat ulang."
+  history-header: "&dRiwayat reputasi %player% &8(&7%count% entri&8)"
+  history-line: "&8- &7%time% &f%delta% &8→ &d%new% &8| &7%source% &8| &f%reason%"
+  history-empty: "&7Belum ada riwayat reputasi untuk player tersebut."
