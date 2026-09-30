@@ -1,0 +1,18 @@
+name: CdrReputation
+version: '0.1.0'
+main: com.menkiestes.cdrreputation.CdrReputationPlugin
+api-version: '1.21'
+author: CADERA
+description: Core reputation system for MoonSign S2.
+website: https://github.com/MenkiPlugcore/CdrReputation
+
+commands:
+  cdrrep:
+    description: CdrReputation administrator command.
+    usage: /cdrrep <get|set|add|remove|history|reload>
+    permission: cdrreputation.admin
+
+permissions:
+  cdrreputation.admin:
+    description: Allows access to CdrReputation administration commands.
+    default: op
