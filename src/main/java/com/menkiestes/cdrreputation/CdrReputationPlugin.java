@@ -3,6 +3,7 @@ package com.menkiestes.cdrreputation;
 import com.menkiestes.cdrreputation.api.*;
 import com.menkiestes.cdrreputation.command.ReputationAdminCommand;
 import com.menkiestes.cdrreputation.config.TierRegistry;
+import com.menkiestes.cdrreputation.integration.betonquest.BetonQuestBootstrap;
 import com.menkiestes.cdrreputation.listener.PlayerLifecycleListener;
 import com.menkiestes.cdrreputation.service.ReputationService;
 import com.menkiestes.cdrreputation.storage.*;
@@ -18,6 +19,17 @@ public final class CdrReputationPlugin extends JavaPlugin {
     private ReputationRepository repository;
     private ReputationService reputationService;
     private MessageService messages;
+    private boolean betonQuestIntegrationRegistered;
+
+    @Override
+    public void onLoad() {
+        if (getServer().getPluginManager().getPlugin("BetonQuest") == null) return;
+        try {
+            betonQuestIntegrationRegistered = BetonQuestBootstrap.register(this);
+        } catch (LinkageError error) {
+            getLogger().warning("BetonQuest ditemukan tetapi API integrasinya tidak kompatibel. CdrReputation tetap berjalan tanpa hook BetonQuest: " + error.getMessage());
+        }
+    }
 
     @Override public void onEnable() {
         saveDefaultConfig();
@@ -41,6 +53,9 @@ public final class CdrReputationPlugin extends JavaPlugin {
         command.setExecutor(adminCommand); command.setTabCompleter(adminCommand);
         Bukkit.getOnlinePlayers().forEach(player -> reputationService.loadPlayer(player.getUniqueId(), player.getName()));
         getLogger().info("CdrReputation v" + getPluginMeta().getVersion() + " enabled. SQLite storage ready.");
+        if (betonQuestIntegrationRegistered) {
+            getLogger().info("BetonQuest integration registered: cdrrep_add, cdrrep_remove, cdrrep_set, cdrrep_value, cdrrep_tier.");
+        }
     }
 
     @Override public void onDisable() {

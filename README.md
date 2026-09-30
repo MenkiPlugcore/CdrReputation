@@ -1,10 +1,46 @@
 # CdrReputation
 
-`CdrReputation` is the core reputation service for MoonSign S2. It is intentionally focused on reputation only so other systems such as BetonQuest integrations, quest journals, bounty hunting, NPC dialogue, and future gameplay modules can consume one stable API.
+`CdrReputation` is the core reputation service for MoonSign S2. It stays focused on reputation so BetonQuest, CdrQuestJournal, CdrBounty, NPC dialogue, and future gameplay modules can consume one stable API.
 
-## v0.1.0 — Core & API
+## v0.2.0 — BetonQuest Integration
 
-Implemented in this release:
+This release keeps every v0.1.0 core feature and adds a native BetonQuest 3.x integration using BetonQuest's Integration API.
+
+### BetonQuest actions
+
+```yaml
+actions:
+  questSuccessRep: 'cdrrep_add 25 "QUEST_COMPLETED_LOST_CARGO"'
+  questFailureRep: 'cdrrep_remove 10 "QUEST_FAILED_LOST_CARGO"'
+  questExpiredRep: 'cdrrep_remove 15 "QUEST_EXPIRED_LOST_CARGO"'
+  forceNeutral: 'cdrrep_set 0 "QUEST_STORY_RESET"'
+```
+
+Actions:
+
+- `cdrrep_add <amount> <reason>`
+- `cdrrep_remove <amount> <reason>`
+- `cdrrep_set <value> <reason>`
+
+`add` and `remove` require a non-negative integer amount. `set` accepts any integer and is still clamped to the minimum/maximum configured by CdrReputation. Every change is audited with `source=BETONQUEST` and `actor=QUEST`.
+
+### BetonQuest conditions
+
+```yaml
+conditions:
+  isTrusted: 'cdrrep_tier trusted'
+  isOutlaw: 'cdrrep_tier outlaw'
+  canTakeRoyalQuest: 'cdrrep_value >= 500'
+  criminalRoute: 'cdrrep_value <= -500'
+```
+
+`cdrrep_value` supports `>`, `>=`, `<`, `<=`, `=`, `==`, `!=` plus aliases `gt`, `gte`, `lt`, `lte`, `eq`, and `ne`.
+
+`cdrrep_tier` checks the tier **key** from `config.yml` and is case-insensitive. BetonQuest's normal condition inversion can be used when needed.
+
+BetonQuest is optional. If it is not installed, CdrReputation continues to work as a standalone plugin. v0.2.0 is built against BetonQuest `3.2.0` and uses the modern 3.x Integration API.
+
+## Core features
 
 - UUID-based reputation storage.
 - Configurable minimum, maximum, default value, and reputation tiers.
@@ -76,13 +112,12 @@ Requirements: JDK 21 and Maven 3.9+.
 mvn clean package
 ```
 
-Output: `target/CdrReputation-0.1.0.jar`.
+Output: `target/CdrReputation-0.2.0.jar`.
 
-## Planned integrations
+## Next
 
-- v0.2.0: BetonQuest reputation events/conditions.
-- CdrQuestJournal: quest journal, live objective progress, timers, and NPC turn-in.
-- CdrBounty: wanted/bounty gameplay backed by the same reputation API.
+- CdrQuestJournal: quest journal, live objective progress, timers, NPC turn-in, Daily/Limited/Story types.
+- CdrBounty: NPC-first wanted/bounty gameplay backed by the same reputation API.
 
 ## License
 
